@@ -13,11 +13,14 @@
 
 3. 配置 charles
 安装完成以后，配置代理的域名和端口。
-![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/9e64d221bb934872a6ec1c8c706acc47.png)
+![image](https://github.com/user-attachments/assets/f1b998e2-726d-44c1-b4b8-1b2efcf4f697)
+
 通常我们都是配置`*:*`，这样就会匹配所有域名和端口，如果你的抓包目标是明确的，那么可以配置对应域名下的所有端口。
-![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/0ba27dfe949d4c20afe2018c9905360e.png)
+![image](https://github.com/user-attachments/assets/0970a690-6d77-4d89-904a-ba57d5bc036b)
+
 我这里就都是填上*了
-![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/81ed9b41c5d24ecd9f2d84404c5e43d1.png)
+![image](https://github.com/user-attachments/assets/c622158e-004a-44f2-8057-ba2ac35f57c4)
+
 接下来配置代理监听的端口和协议
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/ebf51ba0583242cdbfb188fa8d6d697c.png)
 按照下图进行配置即可，SOCKS 代理在本文不做介绍，后续在介绍。
