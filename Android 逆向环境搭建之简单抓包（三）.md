@@ -35,8 +35,10 @@ OK，到这里，我们的电脑端配置就完成了。
 ## Android 证书安装
 在 Android 7.0 之后，用户安装的证书默认在用户的模块下面，而不是安装到系统下面。所以我们还需要将证书移动到系统证书中去。本文将借助 Magisk 的模块去实现这个功能。
 1. 导出 charles 的证书
-  按照下图的操作导出证书![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/d7d98b7b2bcd443dbf6d3fee4926a958.png)
-导出证书的时候，选择导出为 cer 证书即可。
+
+   ![image](https://github.com/user-attachments/assets/93bd8b6a-c610-462c-976c-03846321176c)
+
+    导出证书的时候，选择导出为 cer 证书即可。
 2. 将证书安装到手机上
 
     使用 adb 将证书推送到手机上。例如：
@@ -44,15 +46,25 @@ OK，到这里，我们的电脑端配置就完成了。
         adb push charles.cer /storage/emulated/0/Download/charles.cer
 
     这样在 Download 文件夹下就会有一个 charles.cer 文件。此时是无法直接进行安装的，一般都是需要在手机的设置搜索证书，然后在弹出来的证书窗口中进行选择安装，在 K40 中如下所示：
-![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/fc5a4414380548439d0b27d2d07a6a43.jpeg)
+    
+    ![image](https://github.com/user-attachments/assets/626fe661-8f54-417b-922d-ba7c4145900e)
+
 选择CA证书，进入到证书安装界面
-![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/f2fd7c7d644a447e9b76e253e6497623.jpeg)
+
+![image](https://github.com/user-attachments/assets/b3fa40e3-47d1-452e-ad2c-dddf18d44f75)
+
 然后安装证书
-![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/78d7a40b25e84dcd867b3dfe869dd7cc.jpeg)
+
+![image](https://github.com/user-attachments/assets/82604b1e-575d-4476-bbb0-f6d55873cd5d)
+
 然后选择 Download 目录下刚才导入的证书，进行安装。安装之后在信任的凭据中可以进行查看
-![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/511091d7a5164c1691d67c1b8b808387.jpeg)
+
+![image](https://github.com/user-attachments/assets/b42bae37-d209-4167-8bc7-f53d7882d1f5)
+
 可以看到，我们为用户安装了一个证书，这个证书不是系统的。
-![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/a266d52f227148d99bdb94fcfe9635c7.jpeg)
+
+![image](https://github.com/user-attachments/assets/00bfe3c9-0512-4261-abd4-fc4620c9f8c5)
+
 3. Magisk 模块
     使用 GitHub 上的 https://github.com/ys1231/MoveCertificate 提供的 Magisk 模块来安装一个可以将证书安装到系统的模块。目前是支持 Android 7-15的。
 
@@ -60,13 +72,17 @@ OK，到这里，我们的电脑端配置就完成了。
 
     之后，打开手机上的　Magisk 软件，在模块中选择从本地安装，选择我们刚刚推送上去的模块，安装完成之后，然后重启手机。在你的系统证书列表中，就会有一个 charles.cer 证书了。
 
-![!\[在这里插入图片描述\](https://i-blog.csdnimg.cn/direct/39aec57a226c4333850c8d482ddfa643.jpe](https://i-blog.csdnimg.cn/direct/a3da537ba59844a9afff20093f60ad7b.jpeg)
+    ![image](https://github.com/user-attachments/assets/7f9f651e-561b-4171-a320-da7d8ebfd373)
+
 ## 抓包
 保证你的手机和电脑连接同一个 WIFI，配置手机的 WIFI 代理为你的电脑的IP地址，端口是8888。就是我们刚才在 charles 中配置的。之后，我们在 charles 中进行抓包，就可以抓到手机浏览器的包了。
-![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/0005ab53d26744aab09243b2d92d48d4.png)
+
+![image](https://github.com/user-attachments/assets/3cfc990b-a7da-4640-8f57-525f6ce81201)
+
 图中的1是打开SSL代理，也就是让我们可以抓到 HTTPS的包，2是开始监听流量报文。
 我们在手机上的浏览器中搜索奶龙，就可以看到抓包工具中显示的奶龙搜索结果
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/7c48e1ce3265400b9ea4f39a257988c8.png)
+![image](https://github.com/user-attachments/assets/8e4c5709-6334-45eb-a340-02e2ce1b4cf2)
+
 
 
