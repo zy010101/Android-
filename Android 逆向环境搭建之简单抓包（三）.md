@@ -23,7 +23,9 @@
 
 接下来配置代理监听的端口和协议
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/ebf51ba0583242cdbfb188fa8d6d697c.png)
+
 按照下图进行配置即可，SOCKS 代理在本文不做介绍，后续在介绍。
+
 ![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/6c39921b93ab44009d153c73715ab131.png)
 OK，到这里，我们的电脑端配置就完成了。
 ## Android 证书安装
