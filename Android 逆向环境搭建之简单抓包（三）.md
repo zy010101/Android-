@@ -84,5 +84,14 @@ OK，到这里，我们的电脑端配置就完成了。
 
 ![image](https://github.com/user-attachments/assets/8e4c5709-6334-45eb-a340-02e2ce1b4cf2)
 
+## 配置 charles 外部代理
+通过配置 Charles 的外部代理，我们可以在 burp suite 等其他软件上对 Charles 抓取的包进行操作。
+![image](https://github.com/user-attachments/assets/b462d61f-cedc-49d3-b777-ae379d373bb8)
 
+![image](https://github.com/user-attachments/assets/2b64cb58-2780-400c-ad52-bd2c56c948b9)
 
+进行上述配置之后，在burp suite 中就可以可以很方便的操作我们抓到的包了。
+
+**如果burp suite再次代理的时候，app的包出现问题，那么请检查 burp suite 的默认设置是不是对请求和响应做了修改，Charles 是不会对请求和响应做修改的。** 最重要的就是下面两处的配置，他们会对部分包造成影响
+![image](https://github.com/user-attachments/assets/09c69155-293e-4dd1-aa30-aaf2adb3b99b)
+![image](https://github.com/user-attachments/assets/8de61631-9bb6-4a16-8a7d-7b304c59f5c4)
