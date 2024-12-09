@@ -19,14 +19,18 @@
 ![image](https://github.com/user-attachments/assets/0970a690-6d77-4d89-904a-ba57d5bc036b)
 
 我这里就都是填上*了
+
 ![image](https://github.com/user-attachments/assets/c622158e-004a-44f2-8057-ba2ac35f57c4)
 
 接下来配置代理监听的端口和协议
-![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/ebf51ba0583242cdbfb188fa8d6d697c.png)
+
+![image](https://github.com/user-attachments/assets/8e0f5ce5-a378-4934-9351-ec01604e7406)
+
 
 按照下图进行配置即可，SOCKS 代理在本文不做介绍，后续在介绍。
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/6c39921b93ab44009d153c73715ab131.png)
+![image](https://github.com/user-attachments/assets/e413e6d5-5f67-4855-8703-bb93e2e45ef8)
+
 OK，到这里，我们的电脑端配置就完成了。
 ## Android 证书安装
 在 Android 7.0 之后，用户安装的证书默认在用户的模块下面，而不是安装到系统下面。所以我们还需要将证书移动到系统证书中去。本文将借助 Magisk 的模块去实现这个功能。
