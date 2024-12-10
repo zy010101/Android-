@@ -161,10 +161,16 @@ print("Encrypted message:", encrypted_message)
 
 ![image](https://github.com/user-attachments/assets/87791f6c-9346-46f3-8666-e729bd1d9830)
 
+![image](https://github.com/user-attachments/assets/10497021-fec6-4d56-aea4-9f64f564aad7)
 
+果然，这段代码里设置了 query 参数 sign, `host.addQueryParameter(SIGN, b11).build()).build()`，b11 就是 sign 的值，而 b11 是 `b11 = h3.c().b(request.url().encodedPath())) == null` 生成的，我们先去看 h3.c().b 这个方法干了什么？
 
+![image](https://github.com/user-attachments/assets/f9901c90-29ec-4d95-bfa2-c41dd1aab957)
 
+![image](https://github.com/user-attachments/assets/0f26c784-1939-4f76-8fe6-8bd228f79d7f)
 
+OK，zcvsd1wr2t 是个 native 方法，是 RequestEncoder 这个库实现的。 如果你不懂 Java 的话，还是要回头补习 Java 的。看到这段代码顿感大事不妙，这是通过 JNI 调用了本地共享库 RequestEncoder 中的代码，sdwioxccsd() 和 zcvsd1wr2t() 都是本地方法，它们的实现并不在 Java 中。我们打开 jadx 左边的导航栏，可以看到有个 lib, 里面就放着本地共享库。
 
+![image](https://github.com/user-attachments/assets/45e32dc0-afe7-4a99-b7ab-5708f5c4ba6c)
 
-
+在这里，能找到一个名为 libRequestEncoder.so 的文件，导出这个文件即可。至于如何处理这个库文件，我们之后在学习。下一章节，我们先来 hook 验证一下我们之前的 phone 和 password 的实现代码是否真的正确，看看 `String a11 = wg.i.a(((RichInputCell) aVar2.x(aVar2, com.fenbi.android.leo.business.user.c.password_cell, RichInputCell.class)).getInputText());` 这段代码是否获取的就是明文的数据。
