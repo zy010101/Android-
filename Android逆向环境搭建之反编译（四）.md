@@ -45,4 +45,126 @@ jadx 是 Dex 到 Java 的反编译器，用于从 Android Dex 和 Apk 文件生�
 
 ![image](https://github.com/user-attachments/assets/5ab39d28-e605-48f6-9b16-b5b6b6472cd4)
 
-在这个文件中还包含了其他的登录方式的代码。不过这段代码很难看懂。首先这是一段 kotlin 代码，而不是 Java 代码。
+在这个文件中还包含了其他的登录方式的代码。不过这段代码很难看懂。首先这是一段 kotlin 代码，而不是 Java 代码。没关系，我们有 AI 大模型，我们不懂的它懂。
+
+我们右键一下这个 passwordLogin ，然后点击查找用例，就会跳转到调用的地方，如下图所示，我们可以看到 a12, a11 实际上对应的就是 phone 和 password.
+
+![image](https://github.com/user-attachments/assets/c8dae1b9-b8ef-4681-95ef-e79e73a68651)
+
+剩下的代码我们完全看不懂，不知道在干什么，现在把这段代码丢到大模型，让他解释一下。
+
+![image](https://github.com/user-attachments/assets/c537bb07-0e60-4301-b5c2-cacb84e8e97f)
+
+大模型告诉我们的结果比较模糊，我们并不明白 `String a11 = wg.i.a(((RichInputCell) aVar2.x(aVar2, com.fenbi.android.leo.business.user.c.password_cell, RichInputCell.class)).getInputText());` 是在干什么？单独把这行丢给大模型，继续询问，大模型给出回复如下：
+
+![image](https://github.com/user-attachments/assets/5206476a-80d9-4b0e-b432-5c77a28c7848)
+
+大模型告诉我们， 获取密码输入框中的文本，并将其加密后存储在 a11 变量中。我们可以在下一篇的 hook 中验证一下大模型的判断是否正确。
+
+既然 `wg.i.a` 可能是加密算法，我们点击这个 a 直接跳转到对应的方法，然后看一下具体的代码。我把代码贴在这里
+
+```java
+package wg;
+
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.Security;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+/* loaded from: classes3.dex */
+public class i {
+
+    /* renamed from: a, reason: collision with root package name */
+    public static String f69169a = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDSovT1rrwzrGoMCFb6z8e+5lzVdAD5o8krGIwdfxrVE2OnMijUZdkQk7etPJvZ2JOVXghthAGUUJkDUE8n2ZMNFKPjMrQJI49ewVzqWOKOvgU6Iu60Sn0xpeietP1wWXBkszdV1WfNBJUo2hhPDnIPMGzzdfLW5rMu+tczeUriJQIDAQAB";
+
+    /* renamed from: b, reason: collision with root package name */
+    public static PublicKey f69170b;
+
+    static {
+        KeyFactory keyFactory;
+        try {
+            keyFactory = KeyFactory.getInstance(com.alipay.sdk.encrypt.d.f17015a);
+        } catch (NoSuchAlgorithmException unused) {
+            keyFactory = null;
+        }
+        try {
+            f69170b = keyFactory.generatePublic(new X509EncodedKeySpec(a.a(f69169a, 2)));
+        } catch (InvalidKeySpecException unused2) {
+        }
+    }
+
+    public static String a(String str) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1PADDING", Security.getProvider("BC"));
+        cipher.init(1, f69170b);
+        return a.f(cipher.doFinal(str.getBytes()), 2);
+    }
+}
+```
+简单扫一下这段代码，确实是在加密，而且是使用了 RSA 加密（RSA/ECB/PKCS1PADDING），这段代码看起来很别扭，我们交给 AI 大模型，让它把这段代码翻译成 python 代码。下面是大模型给出的 python 代码
+```python
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+import base64
+
+# 公钥 Base64 编码字符串（与 Java 代码中的 f69169a 相同）
+public_key_pem = """
+-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDSovT1rrwzrGoMCFb6z8e+5lzVdAD5o8krGIwdfxrVE2OnMijUZdkQk7etPJvZ2JOVXghthAGUUJkDUE8n2ZMNFKPjMrQJI49ewVzqWOKOvgU6Iu60Sn0xpeietP1wWXBkszdV1WfNBJUo2hhPDnIPMGzzdfLW5rMu+tczeUriJQIDAQAB
+-----END PUBLIC KEY-----
+"""
+
+# 加载公钥
+public_key = serialization.load_pem_public_key(public_key_pem.encode('utf-8'))
+
+# 加密方法
+def rsa_encrypt(message: str, public_key):
+    # 将消息转换为字节
+    message_bytes = message.encode('utf-8')
+
+    # 使用RSA公钥加密
+    encrypted = public_key.encrypt(
+        message_bytes,
+        padding.PKCS1v15()  # 使用PKCS1填充
+    )
+
+    # 将加密后的字节转换为Base64编码的字符串
+    encrypted_base64 = base64.b64encode(encrypted).decode('utf-8')
+
+    return encrypted_base64
+
+# 使用RSA公钥加密字符串
+encrypted_message = rsa_encrypt("15925833452", public_key)
+print("Encrypted message:", encrypted_message)
+```
+
+我们可以使用这段代码作为之后生成phone 和 password 的代码。到这里的时候，笔者已经迫不及待的想去尝试重放报文，然后就重复失败了。因为这个报文中的 query 参数中的 sign 是每次都变化的，还有请求头中的 Leo-Client-Trace-Id 和 Default-Namespace-Sw8 中的 MQ 也是变化的，还有 cookie 中的 ks_sess 也是每次都变化的。我们现在还不能确定到底是哪个参数或者哪些参数的变化导致了报文重放失败。我们先来看一下 query 中的 sign 参数吧！看看它是如何生成的。
+
+直接启动搜索大法，在 jadx 反编译之后的结果中搜索关键字 sign，得到的结果如下所示：
+
+![image](https://github.com/user-attachments/assets/3639be83-7329-4bb1-9ab1-76d033e81a69)
+
+注意到有一个静态变量的值是 sign ，我们直接跳转到这里。
+
+![image](https://github.com/user-attachments/assets/e39b9944-819b-46e8-84a1-c291e968b140)
+
+直接查找用例，果然找到了使用的地方
+
+![image](https://github.com/user-attachments/assets/87791f6c-9346-46f3-8666-e729bd1d9830)
+
+
+
+
+
+
+
+
