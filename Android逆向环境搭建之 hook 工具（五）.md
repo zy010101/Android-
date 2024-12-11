@@ -50,6 +50,7 @@ subprocess.getoutput('adb forward tcp:27042 tcp:27042')
 subprocess.getoutput('adb forward tcp:27043 tcp:27043')
 ```
 
-ok, 对手机端的操作先到这里，接下来我们该考虑如何编写 hook 代码了。
-
+ok, 对手机端的操作先到这里，接下来我们该考虑如何 hook 了。
+## hook 代码编写
+我们
 
