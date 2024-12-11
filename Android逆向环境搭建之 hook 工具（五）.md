@@ -5,5 +5,15 @@
 ## Frida 介绍和安装
 Frida 是一个面向开发人员、逆向工程师和安全研究人员的动态检测工具包。它允许您将 `JavaScript` 代码片段或您自己的库注入到 Windows、macOS、GNU/Linux、iOS、watchOS、tvOS、Android、FreeBSD 和 QNX 上的 `原生应用` 中。我们直接开始安装 Frida，通过实际的操作来进一步理解 hook 是什么。
 ## 安装 Frida
-Firda通常是通过 python 的 pip 直接进行安装
-  pip install frida-tools
+Firda通常是通过 python 的 pip 直接进行安装，为了避免环境混乱，建议使用 python 的虚拟环境（可以通过 conda 或者 venv 等方式来创建虚拟环境）
+  
+    pip install frida-tools
+安装完成之后，我们使用 pip 来查找 frida 的版本
+
+    pip freeze
+    
+![image](https://github.com/user-attachments/assets/381f3f78-562d-4ab8-a965-62a3d399fdc7)
+
+得到安装的 frida 版本是 16.5.7，之后我们要去手机端安装 Frida Server，Frida 开源在 Github 上，我们可以在其下载页面上下载和电脑上安装的同版本的 Frida Server，但是 Frida Server 支持的架构非常多，那么如何确认我们使用哪一个？可以通过 adb 命令来查看当前手机的架构信息。
+
+    adb shell getprop ro.product.cpu.abi
