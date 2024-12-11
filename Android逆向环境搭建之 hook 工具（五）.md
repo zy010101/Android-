@@ -3,4 +3,7 @@
 ## Hook 的工作原理
 拦截函数调用：你可以指定应用程序中的某个函数或方法进行拦截，该应用程序在执行该函数时会被我们插入的 hook 代码所替换，然后执行我们的自定义代码。在 hook 后，你可以修改被拦截函数的输入、输出，或者干脆阻止其继续执行。通过 hook，可以动态地记录函数的调用过程，捕捉到程序内部的状态，帮助开发人员分析程序的行为，或者验证反编译结果。
 ## Frida 介绍和安装
-Frida 是一个面向开发人员、逆向工程师和安全研究人员的动态检测工具包。它允许您将 `JavaScript` 代码片段或您自己的库注入到 Windows、macOS、GNU/Linux、iOS、watchOS、tvOS、Android、FreeBSD 和 QNX 上的 `原生应用` 中。
+Frida 是一个面向开发人员、逆向工程师和安全研究人员的动态检测工具包。它允许您将 `JavaScript` 代码片段或您自己的库注入到 Windows、macOS、GNU/Linux、iOS、watchOS、tvOS、Android、FreeBSD 和 QNX 上的 `原生应用` 中。我们直接开始安装 Frida，通过实际的操作来进一步理解 hook 是什么。
+## 安装 Frida
+Firda通常是通过 python 的 pip 直接进行安装
+  pip install frida-tools
