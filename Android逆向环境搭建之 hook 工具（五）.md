@@ -137,3 +137,17 @@ public class i {
     }
 }
 ```
+
+OK，我们现在来尝试 hook 一下小猿口算，在手机上打开该 APP，然后到登录界面，输入账号密码，如下：
+
+![xiaoyuan](https://github.com/user-attachments/assets/ed9389ba-f8c6-4fef-b9a9-6448ac004ce4)
+
+然后运行我们的 hook 代码
+
+    python hook.py
+
+之后，点击 APP 上的登录按钮，就可以看到我们的 hook 代码有如下的输出（如果hook 不到，可以尝试重新运行 hook 代码，多试几次，应该就可以 hook 到了，具体原因我现在还不知道是为什么）：
+
+![image](https://github.com/user-attachments/assets/86e9ae80-60a1-4ae2-a68e-88848e921a96)
+
+可以看到，验证了之前 AI 大模型的答案和我们的猜测。
