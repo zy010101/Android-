@@ -52,5 +52,88 @@ subprocess.getoutput('adb forward tcp:27043 tcp:27043')
 
 ok, 对手机端的操作先到这里，接下来我们该考虑如何 hook 了。
 ## hook 代码编写
-我们
+Frida 的核心是用 C 编写的，并将QuickJS 注入目标进程。所以核心的 hook 部分的代码需要使用 js 实现。只需要会 JavaScript 的基本语法就可以完成 hook 任务。所以 js 也得会一些。
 
+我们先拷贝一份 hook 代码的模板，然后进行修改即可。修改完成之后的代码如下所示：
+```python
+import frida
+import sys
+
+### 以后这个代码不需要动### ### ###
+rdev = frida.get_remote_device()
+session = rdev.attach("小猿口算")  # 写上要hook的app的名字，attach方案
+### 以后这个代码不需要动### ###
+
+
+# 要改动的地方,js实现 hook
+scr = """
+Java.perform(function () {
+    // 找到类 反编译的包名+类名
+    var encode = Java.use("wg.i");
+    
+    // 替换类中的方法，方法有几个参数，就要传几个参数
+    // 这里的a就是我们需要修改的方法，而implementation是固定写法
+    encode.a.implementation = function(str){
+        console.log("参数：",str);      // 传入的参数打印了，我们猜是明文数据
+        var res = this.a(str);         //调用原来的函数
+        console.log("返回值：",res);    // 打印出正常执行这个方法，返回的结果
+        return res;
+    }
+});
+"""
+
+
+####下面代码完全不需要动
+script = session.create_script(scr)
+def on_message(message, data):
+    print(message, data)
+script.on("message", on_message)
+script.load()
+sys.stdin.read()
+```
+放上之前的反编译代码，对比看一下就明白了。我们 hook 的是 wg 这个包下面的 i 这个类中的方法 a, 这个方法只有一个参数，所以我们之前的 js 代码中 hook 的时候，函数的参数也是 1 个。
+```java
+package wg;
+
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.Security;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+/* loaded from: classes3.dex */
+public class i {
+
+    /* renamed from: a, reason: collision with root package name */
+    public static String f69169a = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDSovT1rrwzrGoMCFb6z8e+5lzVdAD5o8krGIwdfxrVE2OnMijUZdkQk7etPJvZ2JOVXghthAGUUJkDUE8n2ZMNFKPjMrQJI49ewVzqWOKOvgU6Iu60Sn0xpeietP1wWXBkszdV1WfNBJUo2hhPDnIPMGzzdfLW5rMu+tczeUriJQIDAQAB";
+
+    /* renamed from: b, reason: collision with root package name */
+    public static PublicKey f69170b;
+
+    static {
+        KeyFactory keyFactory;
+        try {
+            keyFactory = KeyFactory.getInstance(com.alipay.sdk.encrypt.d.f17015a);
+        } catch (NoSuchAlgorithmException unused) {
+            keyFactory = null;
+        }
+        try {
+            f69170b = keyFactory.generatePublic(new X509EncodedKeySpec(a.a(f69169a, 2)));
+        } catch (InvalidKeySpecException unused2) {
+        }
+    }
+
+    public static String a(String str) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1PADDING", Security.getProvider("BC"));
+        cipher.init(1, f69170b);
+        return a.f(cipher.doFinal(str.getBytes()), 2);
+    }
+}
+```
